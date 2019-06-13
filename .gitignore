@@ -1,0 +1,7 @@
+.idea
+app.log.txt
+*.pyc
+.vagrant
+secret.py
+test_profile.py
+database_secret.conf

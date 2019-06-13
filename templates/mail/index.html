@@ -1,0 +1,130 @@
+{% extends "topic/base.html" %}
+{% block title %}信息{% endblock%}
+{% block navbar %}
+    <li><a href='/setting'>设置</a></li>
+    <li><a href='/logout'>退出</a></li>
+{% endblock %}
+{% block main %}
+<div id="main">
+{#    侧边栏#}
+    <div id="sidebar">
+        <div class="panel">
+            <div class="header">
+                <span class="col_fade">个人信息</span>
+            </div>
+            <div class="inner">
+                <div class="user_card">
+                    <div>
+                        <a class="user_avatar" href="{{ url_for('index.user_detail', id=user.id) }}">
+                            <img src="{{ user.image }}" title="{{ user.username }}">
+                        </a>
+                        <span class="user_name">
+                            <a class="dark" href="{{ url_for('index.user_detail', id=user.id) }}">
+                                {{ user.username }}
+                            </a>
+                        </span>
+                        <div class="space clearfix"></div>
+                        <span class="signature">
+                            " {{ user.signature }} "
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="inner">
+                <a href="{{ url_for('topic.new') }}" class="create_topic_btn">
+                    <span class="span-success">发布话题xxxxxxxxxxxxxxxx</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="panel">
+            <div class="header">
+                <ul class="breadcrumb">
+                    <li><a href="{{ url_for('topic.index') }}">主页</a><span class="divider">/</span></li>
+                    <li class="active">发送邮件</li>
+                </ul>
+            </div>
+            <div class="inner">
+                <form id="setting_form" class="form-horizontal" action="{{ url_for('.add')}}" method="post">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input class="input-xlarge readonly" name="receiver_id" placeholder="收件人ID" size="30" type="text">
+                            <br>
+                            <input class="input-xlarge readonly" name="title" placeholder="标题" size="30" type="text">
+                            <br>
+                            <input class="input-xlarge readonly" name="content" placeholder="内容" size="30" type="text">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <input type="submit" class="span-primary submit_btn" data-loading-text="保存中.." value="发送邮件">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="header">
+                <span class="col_fade">收件箱</span>
+            </div>
+            <div class="inner">
+                <div id="change_pass_form" class="form-horizontal">
+                {% for r in received %}
+                    <div class="control-group">
+                        <label class="control-label" for="new_pass">收到的邮件</label>
+                        <div class="controls">
+                            <a href="{{ url_for('.view', id = r.id) }}"> {{ r.title }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="header">
+                <span class="col_fade">已发送</span>
+            </div>
+            <div class="inner">
+                <div id="change_pass_form" class="form-horizontal">
+                    {% for s in send %}
+                        <div class="control-group">
+                            <label class="control-label" for="new_pass">发送的邮件</label>
+                            <div class="controls">
+                                <a href="{{ url_for('.view', id = s.id) }}"> {{ s.title }}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#<body>#}
+{##}
+{#<p>发送邮件</p>#}
+{#<form method="post" action="{{ url_for('.add') }}">#}
+{#    <input type="text" name="content" placeholder="content">#}
+{#    <input type="text" name="title" placeholder="title">#}
+{#    <input type="text" name="receiver_id" placeholder="receiver_id">#}
+{#    <button type="submit">发送邮件</button>#}
+{#</form>#}
+{##}
+{#<p>收到邮件</p>#}
+{#{% for r in received %}#}
+{#    <div>#}
+{#        <a href="{{ url_for('.view', id = r.id) }}"> {{ r.title }}</a>#}
+{#    </div>#}
+{#{% endfor %}#}
+{##}
+{#<p>发送邮件</p>#}
+{#{% for s in send %}#}
+{#    <div>#}
+{#        <a href="{{ url_for('.view', id = s.id) }}"> {{ s.title }}</a>#}
+{#    </div>#}
+{#{% endfor %}#}
+{##}
+{#</body>#}
+{#</html>#}
+{% endblock %}

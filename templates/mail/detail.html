@@ -1,0 +1,72 @@
+{% extends "topic/base.html" %}
+{% block title %}收件箱{% endblock%}
+{% block navbar %}
+    <li><a href='/setting'>设置</a></li>
+    <li><a href='/logout'>退出</a></li>
+{% endblock %}
+{% block main %}
+<div id="main">
+{#    侧边栏#}
+    <div id="sidebar">
+        <div class="panel">
+            <div class="header">
+                <span class="col_fade">个人信息</span>
+            </div>
+            <div class="inner">
+                <div class="user_card">
+                    <div>
+                        <a class="user_avatar" href="{{ url_for('index.user_detail', id=user.id) }}">
+                            <img src="{{ user.image }}" title="{{ user.username }}">
+                        </a>
+                        <span class="user_name">
+                            <a class="dark" href="{{ url_for('index.user_detail', id=user.id) }}">
+                                {{ user.username }}
+                            </a>
+                        </span>
+                        <div class="space clearfix"></div>
+                        <span class="signature">
+                            " {{ user.signature }} "
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="inner">
+                <a href="{{ url_for('topic.new') }}" class="create_topic_btn">
+                    <span class="span-success">发布话题xxxxxxxxxxxxxxxx</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        <div class="panel">
+            <div class="header">
+                <span class="col_fade">收件箱</span>
+            </div>
+            <div class="inner">
+                <div id="change_pass_form" class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="new_pass">发件人：</label>
+                        <div class="controls">
+                            {{ message.sender_id }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="new_pass">收件人：</label>
+                        <div class="controls">
+                            {{ message.receiver_id }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="new_pass">邮件内容：</label>
+                        <div class="controls">
+                            {{ message.content }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

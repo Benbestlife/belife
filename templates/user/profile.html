@@ -1,0 +1,167 @@
+{% extends "topic/base.html" %}
+{% block title %}profile{% endblock%}
+{% block navbar %}
+    <li><a href='/mail'>信息</a></li>
+    <li><a href='/setting'>设置</a></li>
+    <li><a href='/logout'>退出</a></li>
+{% endblock %}
+{% block main %}
+    <div id="main">
+        {#侧边栏#}
+        <div id="sidebar">
+            <div class="panel">
+                <div class="header">
+                    <span class="col_fade">个人信息</span>
+                </div>
+                <div class="inner">
+                    <div class="user_card">
+                        <div>
+                            <a class="user_avatar" href="{{ url_for('index.user_detail', id=user.id) }}">
+                                <img src="{{ user.image }}" title="{{ user.username }}">
+                            </a>
+                            <span class="user_name">
+                                <a class="dark" href="{{ url_for('index.user_detail', id=user.id) }}">
+                                    {{ user.username }}
+                                </a>
+                            </span>
+                            <div class="space clearfix"></div>
+                            <span class="signature">
+                                " {{ user.signature }} "
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content">
+            {# 个人信息 #}
+            <div class="panel">
+                <div class="header">
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="{{ url_for('topic.index') }}">主页</a>
+                            <span class="divider">/</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="inner userinfo">
+                    <div class="user_big_avatar">
+                        <img src="{{ user.image }}" class="user_avatar" title="{{ user.username }}">
+                    </div>
+                    <a class="dark">{{ user.username }}</a>
+                </div>
+            </div>
+            {#最近创建的话题#}
+            <div class="panel">
+                <div class="header">
+                    <span class="col_fade">最近创建的话题</span>
+                </div>
+                {% for t in topics %}
+                    <div class="cell">
+                        {#用户#}
+                        <a class="user_avatar pull-left" href="{{ url_for('index.user_detail', id=user.id) }}">
+                            <img src="{{ user.image }}" title="{{ user.username }}">
+                        </a>
+                        {#回复统计#}
+                        <span class="reply_count pull-left">
+                            <span class="count_of_replies" title="回复数">
+                                {{ t.reply_counts }}
+                            </span>
+                            <span class="count_seperator">/</span>
+                            <span class="count_of_visits" title="点击数">
+                                {{ t.views }}
+                            </span>
+                        </span>
+                        {#回复的用户#}
+                        <a class="last_time pull-right">
+                            <img class="user_small_avatar" src="{{ user.image }}">
+                            <span class="last_active_time" data-created_time="{{ t.created_time }}"></span>
+                        </a>
+                        {#话题#}
+                        <div class="topic_title_wrapper">
+                            <a class="topic_title" href="{{ url_for('topic.detail', id=t.id) }}" title="{{ t.title }}">
+                                {{ t.title }}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {#最近参与的话题#}
+            <div class="panel">
+                <div class="header">
+                    <span class="col_fade">最近参与的话题</span>
+                </div>
+                {% for r in reply %}
+                    <div class="cell">
+                        {#用户#}
+                        <a class="user_avatar pull-left" href="{{ url_for('index.user_detail', id=user.id) }}">
+                            <img src="{{ user.image }}" title="{{ user.username }}">
+                        </a>
+                        {#回复统计#}
+                        <span class="reply_count pull-left">
+                            <span class="count_of_replies" title="回复数">
+                                {% if r.topic() is none %}
+                                    0
+                                {% else %}
+                                    {{ r.topic().reply_count() }}
+                                {% endif %}
+                            </span>
+                            <span class="count_seperator">/</span>
+                            <span class="count_of_visits" title="点击数">
+                                {{ r.topic().views }}
+                            </span>
+                        </span>
+                        {#回复的用户#}
+                        <a class="last_time pull-right">
+                            <img class="user_small_avatar" src="{{ user.image }}">
+                            <span class="last_active_time" data-created_time="{{ r.created_time }}"></span>
+                        </a>
+                        {#话题#}
+                        <div class="topic_title_wrapper">
+                            <a class="topic_title" href="{{ url_for('topic.detail', id=r.topic_id) }}" title="{{ r.topic().title }}">
+                                {{ r.topic().title }}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<script>
+    var es = function (sel) {
+        return document.querySelectorAll(sel)
+    }
+    var registerTimer = function () {
+        setInterval(function () {
+            var times = es('.last_active_time')
+            for (var i = 0; i < times.length; i++) {
+                var t = times[i]
+                // data-created_time --> dataset.created_time
+                var time = Number(t.dataset.created_time)
+                var now = Math.floor(new Date() / 1000)
+                var delta = now - time
+                if (delta >= 3600) {
+                    delta = Math.floor(delta / 3600)
+                    var hour = `${delta} 小时前`
+                    t.innerText = hour
+                } else if (delta >= 60) {
+                    delta = Math.floor(delta / 60)
+                    var minute = `${delta} 分钟前`
+                    t.innerText = minute
+                } else if (delta < 60) {
+                    var second = `${delta} 秒前`
+                    t.innerText = second
+                }
+            }
+        }, 1000)
+    }
+
+    var __main = function () {
+        registerTimer()
+    }
+
+    __main()
+</script>
+
+{% endblock %}

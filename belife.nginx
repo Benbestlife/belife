@@ -1,0 +1,15 @@
+server {
+    listen 80;
+
+    location /images {
+        alias /var/www/belife/images;
+    }
+
+    location /static {
+        alias /var/www/belife/static;
+    }
+
+    location / {
+        proxy_pass http://localhost:2000;
+    }
+}
